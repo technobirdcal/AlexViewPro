@@ -3,38 +3,31 @@ plugins {
 }
 
 android {
-    namespace 'com.alexviewpro.app'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.alexviewpro.app"
-        minSdk 33
-        targetSdk 33
+        minSdk 24
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true             // ATIVADO minificação no release
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // Para debugar erros, pode adicionar:
-            // shrinkResources true
-        }
-        debug {
-            minifyEnabled false            // desativa minificação no debug
-        }
+    buildFeatures {
+        viewBinding true
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
+    namespace 'com.alexviewpro.app'
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.webkit:webkit:1.7.0'
+    implementation 'com.google.android.material:material:1.11.0'
 }

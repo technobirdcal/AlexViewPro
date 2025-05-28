@@ -1,4 +1,4 @@
-name: Build e Notifica AlexViewPro
+name: Build and Notify PrivateWebview
 
 on:
   push:
@@ -9,10 +9,10 @@ jobs:
   build-and-notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout código
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Setup JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -23,36 +23,40 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleDebug
 
-      - name: Criar Release e Enviar APK
+      - name: Rename APK with version
+        run: |
+          VERSION="v${{ github.run_number }}"
+          APK_DIR="app/build/outputs/apk/debug"
+          NEW_APK_NAME="PrivateWebview-${VERSION}.apk"
+          mv "$APK_DIR/app-debug.apk" "$APK_DIR/$NEW_APK_NAME"
+          echo "APK_PATH=$APK_DIR/$NEW_APK_NAME" >> $GITHUB_ENV
+          echo "APK_VERSION=$NEW_APK_NAME" >> $GITHUB_ENV
+          echo "TAG_NAME=privatewebview-${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Create GitHub Release and Upload APK
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          TAG: alexview-${{ github.run_number }}
         run: |
-          apk_path="app/build/outputs/apk/debug/app-debug.apk"
-
-          # Cria release
           release_response=$(curl -s -X POST https://api.github.com/repos/${{ github.repository }}/releases \
             -H "Authorization: token $GH_TOKEN" \
-            -d "{\"tag_name\":\"$TAG\",\"name\":\"$TAG\",\"body\":\"Automatic Actions Build by Alex\",\"draft\":false,\"prerelease\":false}")
+            -d "{\"tag_name\":\"$TAG_NAME\",\"name\":\"$TAG_NAME\",\"body\":\"Automated Build via GitHub Actions\",\"draft\":false,\"prerelease\":false}")
 
           upload_url=$(echo "$release_response" | grep upload_url | cut -d '"' -f4 | sed 's/{?name,label}//')
 
-          # Envia APK
-          curl --data-binary @"$apk_path" \
+          curl --data-binary @"$APK_PATH" \
             -H "Authorization: token $GH_TOKEN" \
             -H "Content-Type: application/vnd.android.package-archive" \
-            "$upload_url?name=AlexViewPro.apk"
+            "$upload_url?name=$APK_VERSION"
 
-          # Salva URL da release para próximo step
           echo "RELEASE_URL=$(echo $release_response | jq -r .html_url)" >> $GITHUB_ENV
-          echo "RELEASE_NAME=$TAG" >> $GITHUB_ENV
+          echo "RELEASE_NAME=$TAG_NAME" >> $GITHUB_ENV
 
-      - name: Notificar Telegram
+      - name: Notify Telegram
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          TEXT="🚀 *New Version Released!*: $RELEASE_NAME\n\n🔗 [Download]($RELEASE_URL)"
+          TEXT="🚀 *PrivateWebview Released!*: $RELEASE_NAME\n\n🔗 [Download]($RELEASE_URL)"
           curl -s -X POST https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage \
             -d chat_id="$TELEGRAM_CHAT_ID" \
             -d text="$TEXT" \

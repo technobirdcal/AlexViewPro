@@ -1,24 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#000000"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000">
 
-    <EditText
-        android:id="@+id/search_bar"
-        android:hint="Digite uma URL ou termo de busca"
-        android:textColorHint="#888888"
-        android:textColor="#ffffff"
-        android:background="@android:color/transparent"
+    <LinearLayout
+        android:id="@+id/container_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:imeOptions="actionSearch"
-        android:inputType="textUri" />
+        android:layout_gravity="center"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Pesquisar no Google"
+            android:textColor="#ffffff"
+            android:textColorHint="#888888"
+            android:background="@android:color/transparent"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:drawablePadding="8dp"
+            android:gravity="center"
+            android:padding="12dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Voltar" />
+
+            <Button
+                android:id="@+id/btn_fav"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Favoritar" />
+
+            <Button
+                android:id="@+id/btn_desktop"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Versão Desktop" />
+        </LinearLayout>
+    </LinearLayout>
 
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_marginTop="72dp" />
+</FrameLayout>

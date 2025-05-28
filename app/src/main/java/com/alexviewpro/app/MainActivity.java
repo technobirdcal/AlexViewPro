@@ -1,3 +1,8 @@
+import android.content.Context;
+import android.os.Environment;
+import android.net.Uri;
+import android.app.DownloadManager;
+import android.webkit.DownloadListener;
 package com.alexviewpro.app;
 
 import android.os.Bundle;

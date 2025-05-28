@@ -18,8 +18,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true             // ATIVADO minificação no release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Para debugar erros, pode adicionar:
+            // shrinkResources true
+        }
+        debug {
+            minifyEnabled false            // desativa minificação no debug
         }
     }
 

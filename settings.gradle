@@ -1,2 +1,2 @@
-rootProject.name = 'Private Webview'
+rootProject.name = 'PrivateWebview'
 include ':app'
